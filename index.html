@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>MarketingOne26</title>
+    <meta name="description" content="Web Gallery MarketingOne Angkatan 26">
+    <style>
+    .hilang{
+        display: none;
+    }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.1/baguetteBox.min.css">
+    <link rel="stylesheet" href="gallery-grid.css">
+
+
+</head>
+<body>
+
+<div class="container gallery-container">
+
+    <h1>MarketingOne26</h1>
+
+    <p class="page-description text-center">
+        Angkatan 26 MarketingOne SMK Negeri 2 Cikarang Barat
+    </p>
+
+    
+    <div id="app">
+    <center><button @click="Tampil('semua')" class="btn btn-primary">Semua</button> <button @click="Tampil('sendiri')" class="btn btn-primary">Foto Perorangan</button></center>
+    
+    <div class="tz-gallery">
+
+        <div class="row">
+                <div id="semua">
+                <div  class="col-sm-6 col-md-4" v-for="g in imageAll">
+                        <a class="lightbox" href="{{g.nama_gambar }}">
+                            <img src="{{g.nama_gambar }}" alt="Park">
+                        </a>
+                    </div>
+                </div>
+
+
+                    <div id="sendiri" class="hilang">
+            <div  class="col-sm-6 col-md-4" v-for="g in imageAlone">
+                <a class="lightbox" href="{{g.nama_gambar }}">
+                    <img src="{{g.nama_gambar }}" alt="Park">
+                </a>
+            </div>
+        </div>
+
+        </div>
+
+    </div>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.1/baguetteBox.min.js"></script>
+<script>
+    baguetteBox.run('.tz-gallery');
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.28/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+<script> 
+
+    const VueOb = new Vue({
+        el: "#app",
+        data : {
+            url: "https://rajakadal.000webhostapp.com/?penjelasan=",
+            imageAlone : [],
+            imageAll : [],
+            i : ''
+        },
+        methods: {
+            Tampil: function(asal){
+              if (asal=='semua') {
+                document.getElementById('sendiri').classList.add('hilang');
+                document.getElementById('semua').classList.remove('hilang');
+              } else{
+                document.getElementById('sendiri').classList.remove('hilang');
+                document.getElementById('semua').classList.add('hilang');
+              }
+                
+            }
+        },
+        ready :function(){
+            let i =0;
+            this.$http.get(this.url+'sendiri').then(response => {
+
+             
+            for(i=0;i<response.body.length; i++){
+                this.imageAlone.push(response.body[i]);
+            }
+
+        }, response => {
+            console.log("Error");
+        });
+
+        this.$http.get(this.url+"semua").then(response => {
+
+           
+            for(i=0;i<response.body.length; i++){
+                this.imageAll.push(response.body[i]);
+            }
+
+        }, response => {
+            console.log("Error");
+        });
+
+        }
+    });
+
+    Vue.http.options.emulateJSON = true;
+
+</script>
+</body>
+</html>
